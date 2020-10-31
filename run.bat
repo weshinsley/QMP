@@ -1,2 +1,2 @@
 @echo off
-javaw com.teapotrecords.qmp.QMP
+start javaw com.teapotrecords.qmp.QMP
