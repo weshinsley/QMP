@@ -52,21 +52,24 @@ public class QMP extends Application {
   
   private Button b_play_pause;
   private Button b_rewind;
-  Button b_add = new Button("+");
-  Button b_up = new Button("v");
-  Button b_down = new Button("^");
-  Button b_del = new Button("X");
+  private Button b_stop = new Button("O");
+  private Button b_add = new Button("+");
+  private Button b_up = new Button("v");
+  private Button b_down = new Button("^");
+  private Button b_del = new Button("X");
   
   private void startMovie() {
     is_paused = false;
     int selected = lv_movies.getSelectionModel().getSelectedIndex();
     b_play_pause.setText("||");
+    b_stop.setDisable(false);
     b_rewind.setDisable(true);
     movie_player.play(full_paths.get(selected));
   }
   
   protected void endMovie() {
     b_play_pause.setText(">");
+    b_stop.setDisable(true);
     is_paused = false;
     player.stop();
     movie_player.hide();
@@ -100,6 +103,7 @@ public class QMP extends Application {
     b_del.setDisable(selected == -1);
     b_play_pause.setDisable(selected == -1);
     b_rewind.setDisable(!movie_player.is_playing());
+    b_stop.setDisable(!movie_player.is_playing());
   }
   
   private void initUI(Stage stage) {
@@ -222,12 +226,12 @@ public class QMP extends Application {
     b_up.setOnAction(evt -> {
       int selected = lv_movies.getSelectionModel().getSelectedIndex();
       String temp = full_paths.get(selected);
-      full_paths.set(selected, full_paths.get(selected-1));
-      full_paths.set(selected - 1,  temp);
+      full_paths.set(selected, full_paths.get(selected + 1));
+      full_paths.set(selected + 1,  temp);
       temp = ol_movies.get(selected);
-      ol_movies.set(selected, ol_movies.get(selected - 1));
-      ol_movies.set(selected - 1, temp);
-      lv_movies.getSelectionModel().select(selected-1);
+      ol_movies.set(selected, ol_movies.get(selected + 1));
+      ol_movies.set(selected + 1, temp);
+      lv_movies.getSelectionModel().select(selected + 1);
       b_up.setDisable(selected <= 0);
       conf.saveCurrentConfig();
     });
@@ -235,13 +239,13 @@ public class QMP extends Application {
     b_down.setOnAction(evt -> {
       int selected = lv_movies.getSelectionModel().getSelectedIndex();
       String temp = full_paths.get(selected);
-      full_paths.set(selected, full_paths.get(selected + 1));
-      full_paths.set(selected + 1,  temp);
+      full_paths.set(selected, full_paths.get(selected-1));
+      full_paths.set(selected - 1,  temp);
       temp = ol_movies.get(selected);
-      ol_movies.set(selected, ol_movies.get(selected + 1));
-      ol_movies.set(selected + 1, temp);
-      lv_movies.getSelectionModel().select(selected + 1);
-      b_up.setDisable(selected == full_paths.size() - 1);
+      ol_movies.set(selected, ol_movies.get(selected - 1));
+      ol_movies.set(selected - 1, temp);
+      lv_movies.getSelectionModel().select(selected-1);
+      b_down.setDisable(selected == full_paths.size() - 1);
       conf.saveCurrentConfig();
     });
     
@@ -253,10 +257,11 @@ public class QMP extends Application {
     HBox hb_media_buttons = new HBox();
     b_play_pause = new Button(">");
     b_rewind = new Button("<<");
-    hb_media_buttons.getChildren().addAll(b_rewind, b_play_pause);
+    hb_media_buttons.getChildren().addAll(b_rewind, b_play_pause, b_stop);
     hb_media_buttons.setAlignment(Pos.CENTER_LEFT);
     b_rewind.setDisable(true);
     b_play_pause.setDisable(true);
+    b_stop.setDisable(true);
     
     b_play_pause.setOnAction(evt -> {
       if (movie_player.is_playing()) {
@@ -272,7 +277,12 @@ public class QMP extends Application {
         }
       } else {
         startMovie();
+        b_stop.setDisable(false);
       }
+    });
+    
+    b_stop.setOnAction(evt -> {
+      endMovie();
     });
     
     b_rewind.setOnAction(evt -> {

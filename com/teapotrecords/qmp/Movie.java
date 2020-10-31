@@ -32,9 +32,11 @@ public class Movie {
   }
   
   public void hide() {
-    current_stage.hide();
-    current_scene = null;
-    current_stage = null;
+    if (current_stage!=null) {
+      current_stage.hide();
+      current_scene = null;
+      current_stage = null;
+    }
   }
   
   public void play(String movie) {
