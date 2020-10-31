@@ -54,8 +54,8 @@ public class QMP extends Application {
   private Button b_rewind;
   private Button b_stop = new Button("O");
   private Button b_add = new Button("+");
-  private Button b_up = new Button("v");
-  private Button b_down = new Button("^");
+  private Button b_up = new Button("^");
+  private Button b_down = new Button("v");
   private Button b_del = new Button("X");
   
   private void startMovie() {
@@ -226,26 +226,28 @@ public class QMP extends Application {
     b_up.setOnAction(evt -> {
       int selected = lv_movies.getSelectionModel().getSelectedIndex();
       String temp = full_paths.get(selected);
-      full_paths.set(selected, full_paths.get(selected + 1));
-      full_paths.set(selected + 1,  temp);
+      full_paths.set(selected, full_paths.get(selected-1));
+      full_paths.set(selected - 1,  temp);
       temp = ol_movies.get(selected);
-      ol_movies.set(selected, ol_movies.get(selected + 1));
-      ol_movies.set(selected + 1, temp);
-      lv_movies.getSelectionModel().select(selected + 1);
-      b_up.setDisable(selected <= 0);
+      ol_movies.set(selected, ol_movies.get(selected - 1));
+      ol_movies.set(selected - 1, temp);
+      selected--;
+      lv_movies.getSelectionModel().select(selected);
+      updateButtons(selected);
       conf.saveCurrentConfig();
     });
     
     b_down.setOnAction(evt -> {
       int selected = lv_movies.getSelectionModel().getSelectedIndex();
       String temp = full_paths.get(selected);
-      full_paths.set(selected, full_paths.get(selected-1));
-      full_paths.set(selected - 1,  temp);
+      full_paths.set(selected, full_paths.get(selected + 1));
+      full_paths.set(selected + 1,  temp);
       temp = ol_movies.get(selected);
-      ol_movies.set(selected, ol_movies.get(selected - 1));
-      ol_movies.set(selected - 1, temp);
-      lv_movies.getSelectionModel().select(selected-1);
-      b_down.setDisable(selected == full_paths.size() - 1);
+      ol_movies.set(selected, ol_movies.get(selected + 1));
+      ol_movies.set(selected + 1, temp);
+      selected++;
+      lv_movies.getSelectionModel().select(selected);
+      updateButtons(selected);
       conf.saveCurrentConfig();
     });
     
