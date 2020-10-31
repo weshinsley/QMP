@@ -18,6 +18,7 @@ public class Config {
   int screen_w = 800;
   int screen_h = 600;
   String current_conf = "default.xml";
+  String current_conf_short = "default.xml";
   
   public Config(QMP parent) {
     this.parent = parent;
@@ -32,7 +33,7 @@ public class Config {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder db = dbf.newDocumentBuilder();
       Document doc = db.parse(f);
-      root=doc.getDocumentElement();
+      root = doc.getDocumentElement();
       root.normalize();
     } catch (Exception e) { e.printStackTrace(); }
     return root;
@@ -41,10 +42,10 @@ public class Config {
   public static Node getTag(Node root, String name) {
     NodeList nl = root.getChildNodes();
     Node result = null;
-    for (int i=0; i<nl.getLength(); i++) {
+    for (int i = 0; i < nl.getLength(); i++) {
       if (nl.item(i).getNodeName().equals(name)) {
         result = nl.item(i);
-        i=nl.getLength();
+        i = nl.getLength();
       }
     }
     return result;
@@ -52,7 +53,7 @@ public class Config {
   
   public static String getAttribute(Node parent, String attname)  {
     Node n = parent.getAttributes().getNamedItem(attname);
-    if (n==null) return null;
+    if (n == null) return null;
     else return n.getTextContent();
   }
   
@@ -67,10 +68,9 @@ public class Config {
         "  <screen x=\"" + screen_x + "\" y=\"" + screen_y + "\" w=\"" + screen_w + "\" h=\"" + screen_h + "\" />\n" + 
         "  <movies>\n");
       for (int i=0; i < parent.full_paths.size(); i++) {
-        PW.println("    <movie full_path=\""+parent.full_paths.get(i)+"\" short_name=\""+parent.ol_movies.get(i)+"\" />\n");
+        PW.println("    <movie full_path=\"" + parent.full_paths.get(i) + "\" short_name=\"" + parent.ol_movies.get(i)+"\" />");
       }
-      PW.println("  </movies>\n" + 
-        "</config>\n");
+      PW.println("  </movies>\n</config>");
       PW.close();
     } catch (Exception e) {
       System.out.println("Exception creating default config...");
@@ -91,9 +91,9 @@ public class Config {
   }
   
   public static int countChildren(Node parent,String tag) {
-    int i=0;
-    for (int j=0; j<parent.getChildNodes().getLength(); j++) {
-      if (parent.getChildNodes().item(j).getNodeType()==Node.ELEMENT_NODE) {
+    int i = 0;
+    for (int j = 0; j < parent.getChildNodes().getLength(); j++) {
+      if (parent.getChildNodes().item(j).getNodeType() == Node.ELEMENT_NODE) {
         if (parent.getChildNodes().item(j).getNodeName().equals(tag)) i++;
       }
     }
@@ -101,14 +101,14 @@ public class Config {
   }
   
   public static Node getChildNo(Node parent,String tag,int n) {
-    int i=0;
-    Node result=null;
-    for (int j=0; j<parent.getChildNodes().getLength(); j++) {
-      if (parent.getChildNodes().item(j).getNodeType()==Node.ELEMENT_NODE) {
+    int i = 0;
+    Node result = null;
+    for (int j = 0; j < parent.getChildNodes().getLength(); j++) {
+      if (parent.getChildNodes().item(j).getNodeType() == Node.ELEMENT_NODE) {
         if (parent.getChildNodes().item(j).getNodeName().equals(tag)) {
-          if (i==n) {
+          if (i == n) {
             result = parent.getChildNodes().item(j);
-            j=parent.getChildNodes().getLength();
+            j = parent.getChildNodes().getLength();
           }
           i++;
         }
@@ -128,13 +128,14 @@ public class Config {
       qmp_config = loadDocument("qmp.xml");
       last_config_tag = getTag(qmp_config, "lastconfig");      
     }
-    current_conf = last_config_tag.getTextContent();    
+    current_conf = last_config_tag.getTextContent(); 
   }
   
   // Load current configuration file
   
   public void loadCurrentConfig() {
     if (!new File(current_conf).exists()) saveCurrentConfig();
+    current_conf_short = new File(current_conf).getName();
     Element config = loadDocument(current_conf);
     Node id_tag = getTag(config, "id");
     if (getAttribute(id_tag,  "name").equals("qmpconfig")) {

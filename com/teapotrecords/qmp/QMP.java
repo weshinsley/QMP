@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 
 public class QMP extends Application {
   
-  public String getVersion() { return "0.1"; }
+  public String getVersion() { return "0.2"; }
   public String getVersionDate() { return "30th Oct 2020"; }
   
   // Configuration
@@ -140,6 +140,7 @@ public class QMP extends Application {
       if (f != null) {
         conf.current_conf = f.getAbsolutePath();
         conf.loadCurrentConfig();
+        stage.setTitle("QMP - "+conf.current_conf_short);
         conf.saveQMPConfig();
       }
     });
@@ -150,6 +151,7 @@ public class QMP extends Application {
       if (f != null) {
         conf.current_conf = f.getAbsolutePath();
         conf.saveCurrentConfig();
+        stage.setTitle("QMP - "+conf.current_conf_short);
         conf.saveQMPConfig();
       }
     });
@@ -179,7 +181,6 @@ public class QMP extends Application {
     
     VBox vb_menu = new VBox(mb_main);
     root.getChildren().add(vb_menu);
-    
     
     // The list of things to play...
     
@@ -345,8 +346,12 @@ public class QMP extends Application {
     
     mainScene = new Scene(root, 280,200);
     stage.setOnCloseRequest(evt -> player_exit());
-    stage.setTitle("Quick Media Player");
+    stage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue) stage.setMaximized(false);
+    });
+    stage.setTitle("QMP - "+conf.current_conf_short);
     stage.setScene(mainScene);
+    
     stage.show();
   }
     
@@ -357,6 +362,7 @@ public class QMP extends Application {
     movie_player = new Movie(this);
     conf.loadQMPConfig();
     conf.loadCurrentConfig();
+    stage.setTitle("QMP - "+conf.current_conf_short);
     initUI(stage);
   }
   

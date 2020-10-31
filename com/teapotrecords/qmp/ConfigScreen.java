@@ -46,7 +46,7 @@ public class ConfigScreen extends Stage {
     
     grid.add(new Label("Detect Fullscreens"), 0, gridy);
     Button b_detect = new Button("Detect");
-    grid.add(b_detect,  1,  gridy++);
+    grid.add(b_detect, 1, gridy++);
     
     b_detect.setOnAction(new EventHandler<ActionEvent>() {
       public void handle(ActionEvent e) {
