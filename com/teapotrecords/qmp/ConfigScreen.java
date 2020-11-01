@@ -105,6 +105,7 @@ public class ConfigScreen extends Stage {
     final Button b_ok = new Button("OK");
     final Button b_cancel = new Button("Cancel");
     hb_done.getChildren().addAll(b_ok, b_cancel);
+    
     b_cancel.setOnAction(evt -> hide());
     b_ok.setOnAction(evt -> {
       parent.conf.screen_x = Integer.parseInt(tf_x.getText());
@@ -112,6 +113,7 @@ public class ConfigScreen extends Stage {
       parent.conf.screen_w = Integer.parseInt(tf_w.getText());
       parent.conf.screen_h = Integer.parseInt(tf_h.getText());
       parent.conf.saveCurrentConfig();
+      hide();
     });
     grid.add(hb_done,  1, gridy++);
     
