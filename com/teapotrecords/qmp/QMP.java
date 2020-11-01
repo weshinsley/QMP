@@ -30,8 +30,8 @@ import javafx.stage.Stage;
 
 public class QMP extends Application {
   
-  public String getVersion() { return "0.2"; }
-  public String getVersionDate() { return "30th Oct 2020"; }
+  public String getVersion() { return "0.3"; }
+  public String getVersionDate() { return "1st Nov 2020"; }
   
   // Configuration
   
