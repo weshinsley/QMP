@@ -19,13 +19,13 @@ public class Config {
   int screen_h = 600;
   String current_conf = "default.xml";
   String current_conf_short = "default.xml";
-  
+
   public Config(QMP parent) {
     this.parent = parent;
   }
-  
+
   // Some XML helper stuff
-  
+
   private static Element loadDocument(String file) {
     Element root = null;
     try {
@@ -38,7 +38,7 @@ public class Config {
     } catch (Exception e) { e.printStackTrace(); }
     return root;
   }
-  
+
   public static Node getTag(Node root, String name) {
     NodeList nl = root.getChildNodes();
     Node result = null;
@@ -50,22 +50,22 @@ public class Config {
     }
     return result;
   }
-  
+
   public static String getAttribute(Node parent, String attname)  {
     Node n = parent.getAttributes().getNamedItem(attname);
     if (n == null) return null;
     else return n.getTextContent();
   }
-  
+
   // File handling of system and current config files
-  
+
   public void saveCurrentConfig() {
     try {
       PrintWriter PW = new PrintWriter(new File(current_conf));
-      PW.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" + 
-        "<config>\n" + 
-        "  <id name=\"qmpconfig\" v=\"" + parent.getVersion() + "\" />\n" + 
-        "  <screen x=\"" + screen_x + "\" y=\"" + screen_y + "\" w=\"" + screen_w + "\" h=\"" + screen_h + "\" />\n" + 
+      PW.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+        "<config>\n" +
+        "  <id name=\"qmpconfig\" v=\"" + parent.getVersion() + "\" />\n" +
+        "  <screen x=\"" + screen_x + "\" y=\"" + screen_y + "\" w=\"" + screen_w + "\" h=\"" + screen_h + "\" />\n" +
         "  <movies>\n");
       for (int i=0; i < parent.full_paths.size(); i++) {
         PW.println("    <movie full_path=\"" + parent.full_paths.get(i) + "\" short_name=\"" + parent.ol_movies.get(i)+"\" />");
@@ -76,20 +76,20 @@ public class Config {
       System.out.println("Exception creating default config...");
     }
   }
-  
+
   public void saveQMPConfig() {
     try {
       PrintWriter PW = new PrintWriter(new File("qmp.xml"));
-      PW.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" + 
-          "<qmpcon>\n" + 
-          "  <lastconfig>" + current_conf + "</lastconfig>\n" + 
+      PW.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+          "<qmpcon>\n" +
+          "  <lastconfig>" + current_conf + "</lastconfig>\n" +
           "</qmpcon>\n");
       PW.close();
     } catch (Exception e) {
       System.out.println("Exception creating QMP config...");
     }
   }
-  
+
   public static int countChildren(Node parent,String tag) {
     int i = 0;
     for (int j = 0; j < parent.getChildNodes().getLength(); j++) {
@@ -99,7 +99,7 @@ public class Config {
     }
     return i;
   }
-  
+
   public static Node getChildNo(Node parent,String tag,int n) {
     int i = 0;
     Node result = null;
@@ -116,9 +116,9 @@ public class Config {
     }
     return result;
   }
-  
+
   // First-time load QMP system config
-  
+
   public void loadQMPConfig() {
     if (!new File("qmp.xml").exists()) saveQMPConfig();
     Element qmp_config = loadDocument("qmp.xml");
@@ -126,13 +126,13 @@ public class Config {
     if (last_config_tag == null) {
       saveQMPConfig();
       qmp_config = loadDocument("qmp.xml");
-      last_config_tag = getTag(qmp_config, "lastconfig");      
+      last_config_tag = getTag(qmp_config, "lastconfig");
     }
-    current_conf = last_config_tag.getTextContent(); 
+    current_conf = last_config_tag.getTextContent();
   }
-  
+
   // Load current configuration file
-  
+
   public void loadCurrentConfig() {
     if (!new File(current_conf).exists()) saveCurrentConfig();
     current_conf_short = new File(current_conf).getName();

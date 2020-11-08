@@ -28,26 +28,26 @@ public class ConfigScreen extends Stage {
   final TextField tf_y = new TextField();
   final TextField tf_w = new TextField();
   final TextField tf_h = new TextField();
-  
+
   public ConfigScreen(QMP parent) {
     super();
     this.parent = parent;
     setTitle("Configure Scren Geometry");
     initModality(Modality.APPLICATION_MODAL);
-    
+
     int gridy = 0;
     GridPane grid = new GridPane();
     grid.setAlignment(Pos.CENTER);
     grid.setHgap(10);
     grid.setVgap(10);
     grid.setPadding(new Insets(20, 20, 20, 20));
-    
+
     // Detect screens in use and allow copying geometry
-    
+
     grid.add(new Label("Detect Fullscreens"), 0, gridy);
     Button b_detect = new Button("Detect");
     grid.add(b_detect, 1, gridy++);
-    
+
     b_detect.setOnAction(new EventHandler<ActionEvent>() {
       public void handle(ActionEvent e) {
         List<String> choices = new ArrayList<>();
@@ -78,8 +78,8 @@ public class ConfigScreen extends Stage {
         }
       }
     });
-    
-    
+
+
  // Location line
     final HBox hb_location = new HBox();
     grid.add(new Label("Location (x,y)"), 0, gridy);
@@ -90,7 +90,7 @@ public class ConfigScreen extends Stage {
     grid.add(hb_location, 1, gridy++);
 
     // Size line
-    
+
     final HBox hb_size = new HBox();
     grid.add(new Label("Size (w,h)"), 0, gridy);
     tf_w.setMaxWidth(50);
@@ -98,14 +98,14 @@ public class ConfigScreen extends Stage {
     hb_size.getChildren().add(tf_w);
     hb_size.getChildren().add(tf_h);
     grid.add(hb_size, 1, gridy++);
-    
+
     // Ok/Cancel
-    
+
     final HBox hb_done = new HBox();
     final Button b_ok = new Button("OK");
     final Button b_cancel = new Button("Cancel");
     hb_done.getChildren().addAll(b_ok, b_cancel);
-    
+
     b_cancel.setOnAction(evt -> hide());
     b_ok.setOnAction(evt -> {
       parent.conf.screen_x = Integer.parseInt(tf_x.getText());
@@ -116,18 +116,18 @@ public class ConfigScreen extends Stage {
       hide();
     });
     grid.add(hb_done,  1, gridy++);
-    
+
     // Final setup
     Scene configScene = new Scene(grid, 320,200);
     setScene(configScene);
   }
-  
+
   public void showConf() {
     tf_x.setText(String.valueOf(parent.conf.screen_x));
     tf_y.setText(String.valueOf(parent.conf.screen_y));
     tf_w.setText(String.valueOf(parent.conf.screen_w));
     tf_h.setText(String.valueOf(parent.conf.screen_h));
-    show(); 
+    show();
   }
 
 }
