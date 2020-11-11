@@ -22,15 +22,15 @@ public class Movie {
   private boolean _is_playing = false;
   private Stage current_stage = null;
   private Scene current_scene = null;
-  
+
   public boolean is_playing() {
     return _is_playing;
   }
-  
+
   public Movie(QMP parent) {
     this.parent = parent;
   }
-  
+
   public void hide() {
     if (current_stage!=null) {
       current_stage.hide();
@@ -38,7 +38,7 @@ public class Movie {
       current_stage = null;
     }
   }
-  
+
   public void play(String movie) {
     current_stage = new Stage();
     final File f = new File(movie);
@@ -47,12 +47,12 @@ public class Movie {
     final MediaView mv = new MediaView(mp);
     final DoubleProperty width = mv.fitWidthProperty();
     final DoubleProperty height = mv.fitHeightProperty();
-    
+
     mv.setPreserveRatio(true);
-    
+
     StackPane root = new StackPane();
     root.getChildren().add(mv);
-    
+
     current_stage.setX(parent.conf.screen_x);
     current_stage.setY(parent.conf.screen_y);
     current_stage.setWidth(parent.conf.screen_w);
@@ -61,7 +61,7 @@ public class Movie {
     current_scene.setFill(Color.BLACK);
     width.bind(Bindings.selectDouble(mv.sceneProperty(), "width"));
     height.bind(Bindings.selectDouble(mv.sceneProperty(),  "height"));
-   
+
     current_stage.initStyle(StageStyle.UNDECORATED);
     root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0), new Insets(0,0,0,0))));
     current_stage.setScene(current_scene);
@@ -73,7 +73,7 @@ public class Movie {
         current_scene = null;
         current_stage = null;
         parent.endMovie();
-        
+
       }
     });
     mp.play();

@@ -29,27 +29,28 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class QMP extends Application {
-  
+
   public String getVersion() { return "0.3"; }
   public String getVersionDate() { return "1st Nov 2020"; }
-  
+
   // Configuration
-  
+
   Config conf;
   ConfigScreen config_screen;
   Movie movie_player;
-  
+
   // The list of movies we can play
-  
+
   ObservableList<String> ol_movies = FXCollections.observableArrayList();
   ArrayList<String> full_paths = new ArrayList<String>();
   ListView<String> lv_movies = new ListView<String>(ol_movies);
   ScrollPane sp_movies = new ScrollPane(lv_movies);
-  
+
+
   Scene mainScene = null;
   MediaPlayer player;
   boolean is_paused;
-  
+
   private Button b_play_pause;
   private Button b_rewind;
   private Button b_stop = new Button("O");
@@ -57,7 +58,7 @@ public class QMP extends Application {
   private Button b_up = new Button("^");
   private Button b_down = new Button("v");
   private Button b_del = new Button("X");
-  
+
   private void startMovie() {
     is_paused = false;
     int selected = lv_movies.getSelectionModel().getSelectedIndex();
@@ -66,7 +67,7 @@ public class QMP extends Application {
     b_rewind.setDisable(true);
     movie_player.play(full_paths.get(selected));
   }
-  
+
   protected void endMovie() {
     b_play_pause.setText(">");
     b_stop.setDisable(true);
@@ -74,7 +75,7 @@ public class QMP extends Application {
     player.stop();
     movie_player.hide();
   }
-  
+
   protected void delete(int selected) {
     full_paths.remove(selected);
     ol_movies.remove(selected);
@@ -82,13 +83,13 @@ public class QMP extends Application {
     updateButtons(selected);
     conf.saveCurrentConfig();
   }
-  
+
   private File saveDialog(Stage stage) {
     FileChooser fc = new FileChooser();
     fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("QMP Config(*.xml)", "*.xml"));
     return fc.showSaveDialog(stage);
   }
-  
+
   private void player_exit() {
     if (movie_player.is_playing()) {
       player.stop();
@@ -96,7 +97,7 @@ public class QMP extends Application {
     }
     System.exit(0);
   }
-  
+
   private void updateButtons(int selected) {
     b_up.setDisable(selected <= 0);
     b_down.setDisable(selected == -1 || selected == full_paths.size()-1);
@@ -105,13 +106,14 @@ public class QMP extends Application {
     b_rewind.setDisable(!movie_player.is_playing());
     b_stop.setDisable(!movie_player.is_playing());
   }
-  
+
   private void initUI(Stage stage) {
     VBox root = new VBox();
     root.setPadding(new Insets(10));
-    
+    sp_movies.setFitToHeight(true);
+
     // Main menu
-    
+
     MenuBar mb_main = new MenuBar();
     Menu m_file = new Menu("File");
     MenuItem mi_newconfig = new MenuItem("New Config");
@@ -119,7 +121,7 @@ public class QMP extends Application {
     MenuItem mi_saveconfig = new MenuItem("Save Config As");
     MenuItem mi_exit = new MenuItem("Exit");
     m_file.getItems().addAll(mi_newconfig, mi_loadconfig, mi_saveconfig, mi_exit);
-    
+
     // File New
     mi_newconfig.setOnAction(evt -> {
       File f = saveDialog(stage);
@@ -131,7 +133,7 @@ public class QMP extends Application {
         conf.saveQMPConfig();
       }
     });
-    
+
     // File Load
     mi_loadconfig.setOnAction(evt -> {
       FileChooser fc = new FileChooser();
@@ -144,7 +146,7 @@ public class QMP extends Application {
         conf.saveQMPConfig();
       }
     });
-    
+
     // File Save As
     mi_saveconfig.setOnAction(evt -> {
       File f = saveDialog(stage);
@@ -155,19 +157,19 @@ public class QMP extends Application {
         conf.saveQMPConfig();
       }
     });
-    
+
     // File Exit
     mi_exit.setOnAction(evt -> {
       player_exit();
     });
-        
+
     // Settings, Screen
-    
+
     Menu m_settings = new Menu("Settings");
     MenuItem mi_screen = new MenuItem("Screen settings");
     mi_screen.setOnAction(evt -> config_screen.showConf());
     m_settings.getItems().add(mi_screen);
-    
+
     // Help About
     Menu m_help = new Menu("Help");
     MenuItem mi_about = new MenuItem("About");
@@ -178,22 +180,22 @@ public class QMP extends Application {
     mi_about.setOnAction(evt -> about_dialog.showAndWait());
     m_help.getItems().add(mi_about);
     mb_main.getMenus().addAll(m_file, m_settings, m_help);
-    
+
     VBox vb_menu = new VBox(mb_main);
     root.getChildren().add(vb_menu);
-    
+
     // The list of things to play...
-    
+
     root.getChildren().add(sp_movies);
     sp_movies.setVbarPolicy(ScrollBarPolicy.ALWAYS);
     sp_movies.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
-    
+
     // Allow drag-drop files into lv_movies
-    
+
     lv_movies.setOnDragOver(evt -> {
       evt.acceptTransferModes(TransferMode.LINK);
     });
-    
+
     lv_movies.setOnDragDropped(evt -> {
       List<File> files = evt.getDragboard().getFiles();
       for (int i=0; i<files.size(); i++) {
@@ -205,25 +207,25 @@ public class QMP extends Application {
       }
       conf.saveCurrentConfig();
     });
-    
-      
-    // A toolbar with 
+
+
+    // A toolbar with
     // Media control - two buttons:
     //   (1) Play / Pause
     //   (2) Rewind
-    // List control 
+    // List control
     //   up/down/delete/add buttons
-    
+
     HBox hb_buttons = new HBox();
     hb_buttons.setAlignment(Pos.CENTER_RIGHT);
     b_up.setDisable(true);
     b_down.setDisable(true);
     b_del.setDisable(true);
-    
+
     hb_buttons.getChildren().addAll(b_add, b_up, b_down, b_del);
-    
+
     // Move up/down events
-    
+
     b_up.setOnAction(evt -> {
       int selected = lv_movies.getSelectionModel().getSelectedIndex();
       String temp = full_paths.get(selected);
@@ -237,7 +239,7 @@ public class QMP extends Application {
       updateButtons(selected);
       conf.saveCurrentConfig();
     });
-    
+
     b_down.setOnAction(evt -> {
       int selected = lv_movies.getSelectionModel().getSelectedIndex();
       String temp = full_paths.get(selected);
@@ -251,12 +253,11 @@ public class QMP extends Application {
       updateButtons(selected);
       conf.saveCurrentConfig();
     });
-    
+
     b_del.setOnAction(evt -> {
       delete(lv_movies.getSelectionModel().getSelectedIndex());
-      
     });
-    
+
     HBox hb_media_buttons = new HBox();
     b_play_pause = new Button(">");
     b_rewind = new Button("<<");
@@ -265,7 +266,7 @@ public class QMP extends Application {
     b_rewind.setDisable(true);
     b_play_pause.setDisable(true);
     b_stop.setDisable(true);
-    
+
     b_play_pause.setOnAction(evt -> {
       if (movie_player.is_playing()) {
         if (!is_paused) {
@@ -283,15 +284,15 @@ public class QMP extends Application {
         b_stop.setDisable(false);
       }
     });
-    
+
     b_stop.setOnAction(evt -> {
       endMovie();
     });
-    
+
     b_rewind.setOnAction(evt -> {
       player.seek(player.getStartTime());
     });
-    
+
     // Add movies using add button and browser...
     b_add.setOnAction(evt -> {
       FileChooser fc = new FileChooser();
@@ -306,29 +307,31 @@ public class QMP extends Application {
         updateButtons(lv_movies.getSelectionModel().getSelectedIndex());
       }
     });
-    
+
     AnchorPane ap = new AnchorPane();
     ap.getChildren().addAll(hb_buttons, hb_media_buttons);
     AnchorPane.setRightAnchor(hb_buttons,  0.0);
     AnchorPane.setLeftAnchor(hb_media_buttons,  0.0);
     root.getChildren().add(ap);
-    
+
     // Click on list element
-    
+
     lv_movies.setOnMouseClicked(evt -> {
-      int clicks = evt.getClickCount();
       int selected = lv_movies.getSelectionModel().getSelectedIndex();
-      updateButtons(selected);
-      if (clicks > 1) {
-        if (movie_player.is_playing()) {
-          player.stop();
-          movie_player.hide();
-          is_paused = false;
+      if (selected>=0) {
+        int clicks = evt.getClickCount();
+        updateButtons(selected);
+        if (clicks > 1) {
+          if (movie_player.is_playing()) {
+            player.stop();
+            movie_player.hide();
+            is_paused = false;
+          }
+          startMovie();
         }
-        startMovie();
       }
     });
-    
+
     lv_movies.setOnKeyReleased(evt -> {
       if ((evt.getCode() == KeyCode.DOWN) || (evt.getCode() == KeyCode.UP)) {
         updateButtons(lv_movies.getSelectionModel().getSelectedIndex());
@@ -343,7 +346,7 @@ public class QMP extends Application {
         delete(lv_movies.getSelectionModel().getSelectedIndex());
       }
     });
-    
+
     mainScene = new Scene(root, 280,200);
     stage.setOnCloseRequest(evt -> player_exit());
     stage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
@@ -351,10 +354,9 @@ public class QMP extends Application {
     });
     stage.setTitle("QMP - "+conf.current_conf_short);
     stage.setScene(mainScene);
-    
     stage.show();
   }
-    
+
   @Override
   public void start(Stage stage) {
     conf = new Config(this);
@@ -365,7 +367,7 @@ public class QMP extends Application {
     stage.setTitle("QMP - "+conf.current_conf_short);
     initUI(stage);
   }
-  
+
    public static void main(String[] args) {
      launch(args);
    }
