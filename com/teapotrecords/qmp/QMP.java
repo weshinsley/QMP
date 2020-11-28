@@ -38,6 +38,7 @@ public class QMP extends Application {
   Config conf;
   ConfigScreen config_screen;
   Movie movie_player;
+  External E;
 
   // The list of movies we can play
 
@@ -200,7 +201,16 @@ public class QMP extends Application {
       List<File> files = evt.getDragboard().getFiles();
       for (int i=0; i<files.size(); i++) {
         String f = files.get(i).getName().toLowerCase();
-        if (f.endsWith(".avi") || (f.endsWith(".mp4")) || (f.endsWith(".mov"))) {
+        if (f.endsWith(".mov")) {
+          System.out.println("Converting mov...");
+          String[] res = E.convertMOV(files.get(i).getName(), files.get(i).getAbsolutePath());
+          if (res != null) {
+            ol_movies.add(res[0]);
+            full_paths.add(res[1]);
+            System.out.println(res[0]+" and "+res[1]);
+            
+          } else System.out.println("res is null");
+        } else if (f.endsWith(".avi") || (f.endsWith(".mp4"))) {
           ol_movies.add(files.get(i).getName());
           full_paths.add(files.get(i).getAbsolutePath());
         }
@@ -365,6 +375,7 @@ public class QMP extends Application {
     conf.loadQMPConfig();
     conf.loadCurrentConfig();
     stage.setTitle("QMP - "+conf.current_conf_short);
+    E = new External();
     initUI(stage);
   }
 
