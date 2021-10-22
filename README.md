@@ -5,8 +5,8 @@ Quick Media Player - A JavaFX based media launcher for live settings
 
 The need for this came about when streaming church services during
 lockdown. It turned out surprisingly difficult to drag a media
-player into the right place on an extended dropbox, maximise it to
-fill that screen, and get it playing, in a professional looking way.
+player into the right place on an extended desktop, maximise it to
+fill the screen, and get it playing, in a professional looking way.
 
 So that's what QMP does; it lets you build a list of media clips
 you may want to play, and launch them with a double click at a
