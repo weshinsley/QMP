@@ -16,12 +16,22 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 public class Movie {
   private QMP parent;
   private boolean _is_playing = false;
   private Stage current_stage = null;
   private Scene current_scene = null;
+  private MediaPlayer mp = null;
+
+  public Duration get_time() {
+    return mp.getCurrentTime();
+  }
+
+  public Duration get_final_time() {
+    return mp.getMedia().getDuration();
+  }
 
   public boolean is_playing() {
     return _is_playing;
@@ -43,7 +53,7 @@ public class Movie {
     current_stage = new Stage();
     final File f = new File(movie);
     final Media m = new Media(f.toURI().toString());
-    final MediaPlayer mp = new MediaPlayer(m);
+    mp = new MediaPlayer(m);
     final MediaView mv = new MediaView(mp);
     final DoubleProperty width = mv.fitWidthProperty();
     final DoubleProperty height = mv.fitHeightProperty();
