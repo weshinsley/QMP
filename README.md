@@ -8,20 +8,33 @@ lockdown. It turned out surprisingly difficult to drag a media
 player into the right place on an extended desktop, maximise it to
 fill the screen, and get it playing, in a professional looking way.
 
-So that's what QMP does; it lets you build a list of media clips
-you may want to play, and launch them with a double click at a
+So that's what QMP helps with: it lets you build a list of media clips
+you may want to play, and launch each with a double click at a
 pre-defined location, scaled to a given size, in a border-less
 window.
 
 I've been developing on Windows, but being JavaFX-based, hopefully
 it will work on other platforms, either out of the box, or with
-potential to fix up. It was written to an urgent deadline, so is
+potential to fix up without too much pain (certainly compared to
+other movie player projects I tried to use. 
+
+It was written to an urgent deadline, so is
 untidy here and there, and there is low-hanging fruit for some
 quick-fixes if anyone fancies it. (eg, Hacktoberfest!)
 
 ## Usage
 
-* `run.bat` or `run.sh` to launch.
+* You'll need a Java Development Kit with JavaFX. My favourite is
+[Azul's Zulu Java](https://www.azul.com/downloads/?version=java-8-lts&package=jdk-fx)
+who offer builds for Windows, Linux and MacOS, in x86/x64/ARM flavours. I have
+been developing with Java 8 LTS. Or choose your favourite; in the end, I'd like
+a JavaFX capable `javac` on the command-line, in order to...
+
+* Clone the repo, and run `compile.bat` or `compile.sh` for the extremely simple
+compile script. I know I should learn to use gradle or some such, but really, the
+effort for such a simple compilation is currently beyond my stamina. 
+
+* Use `run.bat` or `run.sh` to launch - again, very simple.
 
 ### Main screen
 
@@ -30,7 +43,7 @@ quick-fixes if anyone fancies it. (eg, Hacktoberfest!)
 * You can manage playlists (new, load, save/as) from the File menu.
 * Add movies by dragging them from another window onto the list,
 or use the '+' button.
-* Re-order movies (just for your convience) with the up/down
+* Re-order movies (just for your convenience) with the up/down
 buttons. (`^` and `v`)
 * Remove movies from the list with the `X` button.
 * Play movies by doubling clicking them, or highlighting them
@@ -62,7 +75,6 @@ See the issues list, or create new ones!
 sometimes can be fixed by renaming them to MP4...
 * There are also codec issues with more recent Apple devices, which can
 be fixed with conversion through ffmpeg.
-* An indication of movie playing time on the main interface would be nice.
 
 ## Known Issues I'm not sure how to fix.
 
