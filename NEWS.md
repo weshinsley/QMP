@@ -1,11 +1,6 @@
-## QMP 0.3
+## QMP Development history:
 
-* Fix non-closing screen geometry config window
-
-## QMP 0.2
-
-* Fix incorrect up/down behaviour
-
-## QMP 0.1
-
-* First test release
+* 0.4 - Add time indicator (and readme)
+* 0.3 - Fix non-closing screen gemoetry config window
+* 0.2 - Fix incorrect up/down behaviour
+* 0.1 - First test release

@@ -4,15 +4,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -21,17 +26,18 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class QMP extends Application {
 
-  public String getVersion() { return "0.3"; }
-  public String getVersionDate() { return "1st Nov 2020"; }
+  public String getVersion() { return "0.4"; }
+  public String getVersionDate() { return "25th Oct 2021"; }
 
   // Configuration
 
@@ -46,7 +52,6 @@ public class QMP extends Application {
   ListView<String> lv_movies = new ListView<String>(ol_movies);
   ScrollPane sp_movies = new ScrollPane(lv_movies);
 
-
   Scene mainScene = null;
   MediaPlayer player;
   boolean is_paused;
@@ -58,6 +63,8 @@ public class QMP extends Application {
   private Button b_up = new Button("^");
   private Button b_down = new Button("v");
   private Button b_del = new Button("X");
+  private Timeline movie_timeupdate;
+  private Label l_timer;
 
   private void startMovie() {
     is_paused = false;
@@ -66,6 +73,7 @@ public class QMP extends Application {
     b_stop.setDisable(false);
     b_rewind.setDisable(true);
     movie_player.play(full_paths.get(selected));
+    movie_timeupdate.play();
   }
 
   protected void endMovie() {
@@ -74,6 +82,8 @@ public class QMP extends Application {
     is_paused = false;
     player.stop();
     movie_player.hide();
+    movie_timeupdate.stop();
+    l_timer.setText("");
   }
 
   protected void delete(int selected) {
@@ -258,6 +268,10 @@ public class QMP extends Application {
       delete(lv_movies.getSelectionModel().getSelectedIndex());
     });
 
+    // Label for movie time...
+
+    l_timer = new Label();
+
     HBox hb_media_buttons = new HBox();
     b_play_pause = new Button(">");
     b_rewind = new Button("<<");
@@ -274,10 +288,12 @@ public class QMP extends Application {
           is_paused = true;
           b_rewind.setDisable(false);
           b_play_pause.setText(">");
+          movie_timeupdate.stop();
         } else {
           is_paused = false;
           b_play_pause.setText("||");
           player.play();
+          movie_timeupdate.play();
         }
       } else {
         startMovie();
@@ -308,11 +324,12 @@ public class QMP extends Application {
       }
     });
 
-    AnchorPane ap = new AnchorPane();
-    ap.getChildren().addAll(hb_buttons, hb_media_buttons);
-    AnchorPane.setRightAnchor(hb_buttons,  0.0);
-    AnchorPane.setLeftAnchor(hb_media_buttons,  0.0);
-    root.getChildren().add(ap);
+    BorderPane bp = new BorderPane();
+    bp.setRight(hb_buttons);
+    bp.setLeft(hb_media_buttons);
+    bp.setCenter(l_timer);
+
+    root.getChildren().add(bp);
 
     // Click on list element
 
@@ -346,6 +363,44 @@ public class QMP extends Application {
         delete(lv_movies.getSelectionModel().getSelectedIndex());
       }
     });
+
+    // Timer to update movie progress
+
+    movie_timeupdate = new Timeline(new KeyFrame(Duration.seconds(0.5),
+      new EventHandler<ActionEvent>() {
+
+        @Override
+        public void handle(ActionEvent event) {
+          Duration done = movie_player.get_time();
+          Duration total = movie_player.get_final_time();
+          int done_hours = (int) done.toHours();
+          int done_mins = (int) done.toMinutes() % 60;
+          int done_secs = (int) done.toSeconds() % 60;
+          int end_hours = (int) total.toHours();
+          int end_mins = (int) total.toMinutes() % 60;
+          int end_secs = (int) total.toSeconds() % 60;
+          String res;
+          if (end_hours > 0) {
+            res = done_hours + ":" +
+                  ((done_mins < 10) ? "0" : "") + done_mins +
+                  ((done_secs < 10) ? "0" : "") + done_secs + " / " +
+                  end_hours + ":" +
+                  ((end_mins < 10) ? "0" : "") + end_mins +
+                  ((end_secs < 10) ? "0" : "") + end_secs;
+
+          } else {
+            res = done_mins + ":" +
+                ((done_secs < 10) ? "0" : "") + done_secs + " / " +
+                  end_mins + ":" +
+                ((end_secs < 10) ? "0" : "") + end_secs;
+          }
+
+
+          l_timer.setText(res);
+        }
+    }));
+    movie_timeupdate.setCycleCount(Timeline.INDEFINITE);
+
 
     mainScene = new Scene(root, 280,200);
     stage.setOnCloseRequest(evt -> player_exit());
