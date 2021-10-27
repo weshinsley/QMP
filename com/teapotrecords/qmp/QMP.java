@@ -57,9 +57,9 @@ public class QMP extends Application {
 
   Scene mainScene = null;
   MediaPlayer player;
- 
+
   private ImageView imagePlay, imagePause;
-  
+
   private Button b_play_pause;
   private Button b_rewind;
   private Button b_stop;
@@ -69,13 +69,13 @@ public class QMP extends Application {
   private Button b_del;
   private Timeline movie_timeupdate;
   private Label l_timer;
-  
+
   // Current state - as movie_player.is_playing() seems to report false positives
   private final byte PLAYING = 1;
   private final byte PAUSE = 2;
   private final byte STOPPED = 3;
   private byte STATUS = STOPPED;
-  
+
   private ImageView getImage(String s) {
     ImageView iv = null;
     try {
@@ -83,7 +83,7 @@ public class QMP extends Application {
     } catch (Exception e) { e.printStackTrace();}
     return iv;
   }
-    
+
   private void startMovie() {
     int selected = lv_movies.getSelectionModel().getSelectedIndex();
     b_play_pause.setGraphic(imagePause);
@@ -135,7 +135,7 @@ public class QMP extends Application {
     b_rewind.setDisable(STATUS == STOPPED);
     b_stop.setDisable(STATUS == STOPPED);
   }
-  
+
   private void updateTimer() {
     Duration done = movie_player.get_time();
     Duration total = movie_player.get_final_time();
@@ -175,7 +175,7 @@ public class QMP extends Application {
     final ImageView imageDown = getImage("resources/images/iconmonstr-triangle-3-16-rev.png");
     final ImageView imageAdd = getImage("resources/images/iconmonstr-plus-5-16.png");
     final ImageView imageDelete = getImage("resources/images/iconmonstr-x-mark-4-16.png");
-    
+
     imagePlay = getImage("resources/images/iconmonstr-media-control-48-16.png");
     imagePause = getImage("resources/images/iconmonstr-media-control-49-16.png");
 
@@ -183,7 +183,7 @@ public class QMP extends Application {
     b_up = new Button("", imageUp);
     b_down = new Button("", imageDown);
     b_del = new Button("", imageDelete);
-    
+
     // Main menu
 
     MenuBar mb_main = new MenuBar();
@@ -294,7 +294,7 @@ public class QMP extends Application {
     b_up.setDisable(true);
     b_down.setDisable(true);
     b_del.setDisable(true);
-    
+
     b_stop = new Button("", imageStop);
 
     hb_buttons.getChildren().addAll(b_add, b_up, b_down, b_del);
@@ -367,7 +367,7 @@ public class QMP extends Application {
     b_stop.setOnAction(evt -> {
       endMovie();
     });
-    
+
     b_rewind.setOnAction(evt -> {
       player.seek(player.getStartTime());
       updateTimer();
@@ -436,7 +436,7 @@ public class QMP extends Application {
           updateTimer();
         }
     }));
-    
+
     movie_timeupdate.setCycleCount(Timeline.INDEFINITE);
 
     mainScene = new Scene(root, 350,200);

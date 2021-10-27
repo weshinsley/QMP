@@ -16,7 +16,7 @@ window.
 I've been developing on Windows, but being JavaFX-based, hopefully
 it will work on other platforms, either out of the box, or with
 potential to fix up without too much pain (certainly compared to
-other movie player projects I tried to use. 
+other movie player projects I tried to use.
 
 It was written to an urgent deadline, so is
 untidy here and there, and there is low-hanging fruit for some
@@ -32,7 +32,7 @@ a JavaFX capable `javac` on the command-line, in order to...
 
 * Clone the repo, and run `compile.bat` or `compile.sh` for the extremely simple
 compile script. I know I should learn to use gradle or some such, but really, the
-effort for such a simple compilation is currently beyond my stamina. 
+effort for such a simple compilation is currently beyond my stamina.
 
 * Use `run.bat` or `run.sh` to launch - again, very simple.
 
@@ -74,12 +74,12 @@ See the issues list, or create new ones!
 sometimes can be fixed by renaming them to MP4...
 * There are also codec issues with more recent Apple devices, which can
 be fixed with conversion through ffmpeg.
-* There are no tests. Because I don't really know how to do this in 
+* There are no tests. Because I don't really know how to do this in
 JavaFX, so I am only doing human testing. This would be good to learn.
 
 ## Known Issues I'm not sure how to fix.
 
-* The interface on Windows supports dragging and dropping movies 
-  into the playlist - however this *does not* work if you run as 
-  administrator. Not sure exactly why you would, but perhaps this 
-  happens accidentally. 
+* The interface on Windows supports dragging and dropping movies
+  into the playlist - however this *does not* work if you run as
+  administrator. Not sure exactly why you would, but perhaps this
+  happens accidentally.
