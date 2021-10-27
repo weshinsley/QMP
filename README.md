@@ -16,7 +16,7 @@ window.
 I've been developing on Windows, but being JavaFX-based, hopefully
 it will work on other platforms, either out of the box, or with
 potential to fix up without too much pain (certainly compared to
-other movie player projects I tried to use. 
+other movie player projects I tried to use.
 
 It was written to an urgent deadline, so is
 untidy here and there, and there is low-hanging fruit for some
@@ -32,7 +32,7 @@ a JavaFX capable `javac` on the command-line, in order to...
 
 * Clone the repo, and run `compile.bat` or `compile.sh` for the extremely simple
 compile script. I know I should learn to use gradle or some such, but really, the
-effort for such a simple compilation is currently beyond my stamina. 
+effort for such a simple compilation is currently beyond my stamina.
 
 * Use `run.bat` or `run.sh` to launch - again, very simple.
 
@@ -42,16 +42,16 @@ effort for such a simple compilation is currently beyond my stamina.
 
 * You can manage playlists (new, load, save/as) from the File menu.
 * Add movies by dragging them from another window onto the list,
-or use the '+' button.
+or use the add button.
 * Re-order movies (just for your convenience) with the up/down
-buttons. (`^` and `v`)
-* Remove movies from the list with the `X` button.
+buttons.
+* Remove movies from the list with the delete button.
 * Play movies by doubling clicking them, or highlighting them
-and clicking the play `>` button.
-* The Play turns into pause `||` while the movie plays, and turns
-into resume `>` if you pause the movie!
-* To rewind the movie, press `<<`.
-* The `O` button stops the movie and removes the window.
+and clicking the play button.
+* The Play turns into pause while the movie plays, and turns
+into resume if you pause the movie.
+* Left-most button rewinds a movie at any time.
+* The stop button stops the movie and removes the movie window.
 
 ### Settings
 
@@ -68,17 +68,18 @@ you can autodetect monitors, and pick a full-screen one.
 
 See the issues list, or create new ones!
 
-* The icons look terrible.
 * Automatic check/install updates would be great, and fairly easy.
 * There are issues with filenames containing quotes or special characters.
 * There are issues with playing MOVs created with Apple devices, which
 sometimes can be fixed by renaming them to MP4...
 * There are also codec issues with more recent Apple devices, which can
 be fixed with conversion through ffmpeg.
+* There are no tests. Because I don't really know how to do this in
+JavaFX, so I am only doing human testing. This would be good to learn.
 
 ## Known Issues I'm not sure how to fix.
 
-* The interface on Windows supports dragging and dropping movies 
-  into the playlist - however this *does not* work if you run as 
-  administrator. Not sure exactly why you would, but perhaps this 
-  happens accidentally. 
+* The interface on Windows supports dragging and dropping movies
+  into the playlist - however this *does not* work if you run as
+  administrator. Not sure exactly why you would, but perhaps this
+  happens accidentally.

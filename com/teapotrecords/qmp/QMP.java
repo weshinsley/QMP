@@ -1,6 +1,7 @@
 package com.teapotrecords.qmp;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
@@ -36,8 +39,8 @@ import javafx.util.Duration;
 
 public class QMP extends Application {
 
-  public String getVersion() { return "0.4"; }
-  public String getVersionDate() { return "25th Oct 2021"; }
+  public String getVersion() { return "0.5"; }
+  public String getVersionDate() { return "26th Oct 2021"; }
 
   // Configuration
 
@@ -54,36 +57,52 @@ public class QMP extends Application {
 
   Scene mainScene = null;
   MediaPlayer player;
-  boolean is_paused;
+
+  private ImageView imagePlay, imagePause;
 
   private Button b_play_pause;
   private Button b_rewind;
-  private Button b_stop = new Button("O");
-  private Button b_add = new Button("+");
-  private Button b_up = new Button("^");
-  private Button b_down = new Button("v");
-  private Button b_del = new Button("X");
+  private Button b_stop;
+  private Button b_add;
+  private Button b_up;
+  private Button b_down;
+  private Button b_del;
   private Timeline movie_timeupdate;
   private Label l_timer;
 
+  // Current state - as movie_player.is_playing() seems to report false positives
+  private final byte PLAYING = 1;
+  private final byte PAUSE = 2;
+  private final byte STOPPED = 3;
+  private byte STATUS = STOPPED;
+
+  private ImageView getImage(String s) {
+    ImageView iv = null;
+    try {
+      iv = new ImageView(new Image(new FileInputStream(s)));
+    } catch (Exception e) { e.printStackTrace();}
+    return iv;
+  }
+
   private void startMovie() {
-    is_paused = false;
     int selected = lv_movies.getSelectionModel().getSelectedIndex();
-    b_play_pause.setText("||");
+    b_play_pause.setGraphic(imagePause);
     b_stop.setDisable(false);
-    b_rewind.setDisable(true);
+    b_rewind.setDisable(false);
     movie_player.play(full_paths.get(selected));
     movie_timeupdate.play();
+    STATUS = PLAYING;
   }
 
   protected void endMovie() {
-    b_play_pause.setText(">");
+    b_play_pause.setGraphic(imagePlay);
     b_stop.setDisable(true);
-    is_paused = false;
+    b_rewind.setDisable(true);
     player.stop();
     movie_player.hide();
     movie_timeupdate.stop();
     l_timer.setText("");
+    STATUS = STOPPED;
   }
 
   protected void delete(int selected) {
@@ -101,7 +120,7 @@ public class QMP extends Application {
   }
 
   private void player_exit() {
-    if (movie_player.is_playing()) {
+    if (STATUS != STOPPED) {
       player.stop();
       movie_player.hide();
     }
@@ -113,14 +132,57 @@ public class QMP extends Application {
     b_down.setDisable(selected == -1 || selected == full_paths.size()-1);
     b_del.setDisable(selected == -1);
     b_play_pause.setDisable(selected == -1);
-    b_rewind.setDisable(!movie_player.is_playing());
-    b_stop.setDisable(!movie_player.is_playing());
+    b_rewind.setDisable(STATUS == STOPPED);
+    b_stop.setDisable(STATUS == STOPPED);
+  }
+
+  private void updateTimer() {
+    Duration done = movie_player.get_time();
+    Duration total = movie_player.get_final_time();
+    int done_hours = (int) done.toHours();
+    int done_mins = (int) done.toMinutes() % 60;
+    int done_secs = (int) done.toSeconds() % 60;
+    int end_hours = (int) total.toHours();
+    int end_mins = (int) total.toMinutes() % 60;
+    int end_secs = (int) total.toSeconds() % 60;
+    String res;
+    if (end_hours > 0) {
+      res = done_hours + ":" +
+            ((done_mins < 10) ? "0" : "") + done_mins +
+            ((done_secs < 10) ? "0" : "") + done_secs + " / " +
+            end_hours + ":" +
+            ((end_mins < 10) ? "0" : "") + end_mins +
+            ((end_secs < 10) ? "0" : "") + end_secs;
+
+    } else {
+      res = done_mins + ":" +
+          ((done_secs < 10) ? "0" : "") + done_secs + " / " +
+            end_mins + ":" +
+          ((end_secs < 10) ? "0" : "") + end_secs;
+    }
+    l_timer.setText(res);
   }
 
   private void initUI(Stage stage) {
     VBox root = new VBox();
     root.setPadding(new Insets(10));
-    sp_movies.setFitToHeight(true);
+    sp_movies.fitToHeightProperty().set(true);
+    sp_movies.fitToWidthProperty().set(true);
+    stage.getIcons().add(new Image("file:resources/images/qmp_app.png"));
+    final ImageView imageRewind = getImage("resources/images/iconmonstr-arrow-31-16.png");
+    final ImageView imageStop = getImage("resources/images/iconmonstr-media-control-50-16.png");
+    final ImageView imageUp = getImage("resources/images/iconmonstr-triangle-3-16.png");
+    final ImageView imageDown = getImage("resources/images/iconmonstr-triangle-3-16-rev.png");
+    final ImageView imageAdd = getImage("resources/images/iconmonstr-plus-5-16.png");
+    final ImageView imageDelete = getImage("resources/images/iconmonstr-x-mark-4-16.png");
+
+    imagePlay = getImage("resources/images/iconmonstr-media-control-48-16.png");
+    imagePause = getImage("resources/images/iconmonstr-media-control-49-16.png");
+
+    b_add = new Button("", imageAdd);
+    b_up = new Button("", imageUp);
+    b_down = new Button("", imageDown);
+    b_del = new Button("", imageDelete);
 
     // Main menu
 
@@ -197,7 +259,7 @@ public class QMP extends Application {
     // The list of things to play...
 
     root.getChildren().add(sp_movies);
-    sp_movies.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+    sp_movies.setVbarPolicy(ScrollBarPolicy.NEVER);
     sp_movies.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 
     // Allow drag-drop files into lv_movies
@@ -223,6 +285,7 @@ public class QMP extends Application {
     // Media control - two buttons:
     //   (1) Play / Pause
     //   (2) Rewind
+    //   (3) Stop/Close
     // List control
     //   up/down/delete/add buttons
 
@@ -231,6 +294,8 @@ public class QMP extends Application {
     b_up.setDisable(true);
     b_down.setDisable(true);
     b_del.setDisable(true);
+
+    b_stop = new Button("", imageStop);
 
     hb_buttons.getChildren().addAll(b_add, b_up, b_down, b_del);
 
@@ -273,8 +338,8 @@ public class QMP extends Application {
     l_timer = new Label();
 
     HBox hb_media_buttons = new HBox();
-    b_play_pause = new Button(">");
-    b_rewind = new Button("<<");
+    b_play_pause = new Button("", imagePlay);
+    b_rewind = new Button("", imageRewind);
     hb_media_buttons.getChildren().addAll(b_rewind, b_play_pause, b_stop);
     hb_media_buttons.setAlignment(Pos.CENTER_LEFT);
     b_rewind.setDisable(true);
@@ -282,20 +347,18 @@ public class QMP extends Application {
     b_stop.setDisable(true);
 
     b_play_pause.setOnAction(evt -> {
-      if (movie_player.is_playing()) {
-        if (!is_paused) {
-          player.pause();
-          is_paused = true;
-          b_rewind.setDisable(false);
-          b_play_pause.setText(">");
-          movie_timeupdate.stop();
-        } else {
-          is_paused = false;
-          b_play_pause.setText("||");
-          player.play();
-          movie_timeupdate.play();
-        }
-      } else {
+      b_rewind.setDisable(false);
+      if (STATUS == PLAYING) {
+        player.pause();
+        b_play_pause.setGraphic(imagePlay);
+        movie_timeupdate.stop();
+        STATUS = PAUSE;
+      } else if (STATUS == PAUSE) {
+        b_play_pause.setGraphic(imagePause);
+        player.play();
+        movie_timeupdate.play();
+        STATUS = PLAYING;
+      } else { // STATUS == STOPPED
         startMovie();
         b_stop.setDisable(false);
       }
@@ -307,6 +370,7 @@ public class QMP extends Application {
 
     b_rewind.setOnAction(evt -> {
       player.seek(player.getStartTime());
+      updateTimer();
     });
 
     // Add movies using add button and browser...
@@ -339,10 +403,9 @@ public class QMP extends Application {
         int clicks = evt.getClickCount();
         updateButtons(selected);
         if (clicks > 1) {
-          if (movie_player.is_playing()) {
+          if (STATUS != STOPPED) {
             player.stop();
             movie_player.hide();
-            is_paused = false;
           }
           startMovie();
         }
@@ -353,10 +416,9 @@ public class QMP extends Application {
       if ((evt.getCode() == KeyCode.DOWN) || (evt.getCode() == KeyCode.UP)) {
         updateButtons(lv_movies.getSelectionModel().getSelectedIndex());
       } else if ((evt.getCode() == KeyCode.ENTER) || (evt.getCode() == KeyCode.SPACE)) {
-        if (movie_player.is_playing()) {
+        if (STATUS != STOPPED) {
           player.stop();
           movie_player.hide();
-          is_paused = false;
         }
         startMovie();
       } else if ((evt.getCode() == KeyCode.DELETE) || (evt.getCode() == KeyCode.BACK_SPACE)) {
@@ -371,38 +433,13 @@ public class QMP extends Application {
 
         @Override
         public void handle(ActionEvent event) {
-          Duration done = movie_player.get_time();
-          Duration total = movie_player.get_final_time();
-          int done_hours = (int) done.toHours();
-          int done_mins = (int) done.toMinutes() % 60;
-          int done_secs = (int) done.toSeconds() % 60;
-          int end_hours = (int) total.toHours();
-          int end_mins = (int) total.toMinutes() % 60;
-          int end_secs = (int) total.toSeconds() % 60;
-          String res;
-          if (end_hours > 0) {
-            res = done_hours + ":" +
-                  ((done_mins < 10) ? "0" : "") + done_mins +
-                  ((done_secs < 10) ? "0" : "") + done_secs + " / " +
-                  end_hours + ":" +
-                  ((end_mins < 10) ? "0" : "") + end_mins +
-                  ((end_secs < 10) ? "0" : "") + end_secs;
-
-          } else {
-            res = done_mins + ":" +
-                ((done_secs < 10) ? "0" : "") + done_secs + " / " +
-                  end_mins + ":" +
-                ((end_secs < 10) ? "0" : "") + end_secs;
-          }
-
-
-          l_timer.setText(res);
+          updateTimer();
         }
     }));
+
     movie_timeupdate.setCycleCount(Timeline.INDEFINITE);
 
-
-    mainScene = new Scene(root, 280,200);
+    mainScene = new Scene(root, 350,200);
     stage.setOnCloseRequest(evt -> player_exit());
     stage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue) stage.setMaximized(false);
