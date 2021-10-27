@@ -42,16 +42,16 @@ effort for such a simple compilation is currently beyond my stamina.
 
 * You can manage playlists (new, load, save/as) from the File menu.
 * Add movies by dragging them from another window onto the list,
-or use the '+' button.
+or use the add button.
 * Re-order movies (just for your convenience) with the up/down
-buttons. (`^` and `v`)
-* Remove movies from the list with the `X` button.
+buttons.
+* Remove movies from the list with the delete button.
 * Play movies by doubling clicking them, or highlighting them
-and clicking the play `>` button.
-* The Play turns into pause `||` while the movie plays, and turns
-into resume `>` if you pause the movie!
-* To rewind the movie, press `<<`.
-* The `O` button stops the movie and removes the window.
+and clicking the play button.
+* The Play turns into pause while the movie plays, and turns
+into resume if you pause the movie.
+* Left-most button rewinds a movie at any time.
+* The stop button stops the movie and removes the movie window.
 
 ### Settings
 
@@ -68,13 +68,14 @@ you can autodetect monitors, and pick a full-screen one.
 
 See the issues list, or create new ones!
 
-* The icons look terrible.
 * Automatic check/install updates would be great, and fairly easy.
 * There are issues with filenames containing quotes or special characters.
 * There are issues with playing MOVs created with Apple devices, which
 sometimes can be fixed by renaming them to MP4...
 * There are also codec issues with more recent Apple devices, which can
 be fixed with conversion through ffmpeg.
+* There are no tests. Because I don't really know how to do this in 
+JavaFX, so I am only doing human testing. This would be good to learn.
 
 ## Known Issues I'm not sure how to fix.
 
