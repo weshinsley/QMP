@@ -63,10 +63,10 @@ public class QMP extends Application {
   private Button b_play_pause;
   private Button b_rewind;
   private Button b_stop;
-  private Button b_add = new Button("+");
-  private Button b_up = new Button("^");
-  private Button b_down = new Button("v");
-  private Button b_del = new Button("X");
+  private Button b_add;
+  private Button b_up;
+  private Button b_down;
+  private Button b_del;
   private Timeline movie_timeupdate;
   private Label l_timer;
   
@@ -166,13 +166,24 @@ public class QMP extends Application {
   private void initUI(Stage stage) {
     VBox root = new VBox();
     root.setPadding(new Insets(10));
-    sp_movies.setFitToHeight(true);
-    
+    sp_movies.fitToHeightProperty().set(true);
+    sp_movies.fitToWidthProperty().set(true);
+    stage.getIcons().add(new Image("file:resources/images/qmp_app.png"));
     final ImageView imageRewind = getImage("resources/images/iconmonstr-arrow-31-16.png");
     final ImageView imageStop = getImage("resources/images/iconmonstr-media-control-50-16.png");
+    final ImageView imageUp = getImage("resources/images/iconmonstr-triangle-3-16.png");
+    final ImageView imageDown = getImage("resources/images/iconmonstr-triangle-3-16-rev.png");
+    final ImageView imageAdd = getImage("resources/images/iconmonstr-plus-5-16.png");
+    final ImageView imageDelete = getImage("resources/images/iconmonstr-x-mark-4-16.png");
+    
     imagePlay = getImage("resources/images/iconmonstr-media-control-48-16.png");
     imagePause = getImage("resources/images/iconmonstr-media-control-49-16.png");
 
+    b_add = new Button("", imageAdd);
+    b_up = new Button("", imageUp);
+    b_down = new Button("", imageDown);
+    b_del = new Button("", imageDelete);
+    
     // Main menu
 
     MenuBar mb_main = new MenuBar();
@@ -248,7 +259,7 @@ public class QMP extends Application {
     // The list of things to play...
 
     root.getChildren().add(sp_movies);
-    sp_movies.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+    sp_movies.setVbarPolicy(ScrollBarPolicy.NEVER);
     sp_movies.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 
     // Allow drag-drop files into lv_movies
@@ -428,8 +439,7 @@ public class QMP extends Application {
     
     movie_timeupdate.setCycleCount(Timeline.INDEFINITE);
 
-
-    mainScene = new Scene(root, 280,200);
+    mainScene = new Scene(root, 350,200);
     stage.setOnCloseRequest(evt -> player_exit());
     stage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue) stage.setMaximized(false);
