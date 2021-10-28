@@ -39,8 +39,8 @@ import javafx.util.Duration;
 
 public class QMP extends Application {
 
-  public String getVersion() { return "0.5"; }
-  public String getVersionDate() { return "26th Oct 2021"; }
+  public String getVersion() { return "0.6"; }
+  public String getVersionDate() { return "28th Oct 2021"; }
 
   // Configuration
 
