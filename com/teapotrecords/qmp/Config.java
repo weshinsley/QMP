@@ -2,6 +2,7 @@ package com.teapotrecords.qmp;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Base64;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,6 +23,14 @@ public class Config {
 
   public Config(QMP parent) {
     this.parent = parent;
+  }
+  
+  private String toB64(String s) {
+    return Base64.getEncoder().encodeToString(s.getBytes());
+  }
+  
+  private String fromB64(String s) {
+    return new String(Base64.getDecoder().decode(s));
   }
 
   // Some XML helper stuff
@@ -66,9 +75,9 @@ public class Config {
         "<config>\n" +
         "  <id name=\"qmpconfig\" v=\"" + parent.getVersion() + "\" />\n" +
         "  <screen x=\"" + screen_x + "\" y=\"" + screen_y + "\" w=\"" + screen_w + "\" h=\"" + screen_h + "\" />\n" +
-        "  <movies>\n");
+        "  <movies fmt=\"b64\">\n");
       for (int i=0; i < parent.full_paths.size(); i++) {
-        PW.println("    <movie full_path=\"" + parent.full_paths.get(i) + "\" short_name=\"" + parent.ol_movies.get(i)+"\" />");
+        PW.println("    <movie full_path=\"" + toB64(parent.full_paths.get(i)) + "\" short_name=\"" + toB64(parent.ol_movies.get(i))+"\" />");
       }
       PW.println("  </movies>\n</config>");
       PW.close();
@@ -148,11 +157,19 @@ public class Config {
       parent.full_paths.clear();
       parent.ol_movies.clear();
       Node movies_tag = getTag(config, "movies");
+      String B64attr = getAttribute(movies_tag, "fmt");
+      boolean inB64 = false;
+      if (B64attr != null) if (B64attr.equals("b64")) inB64 = true;
+      
       int n_movies = countChildren(movies_tag, "movie");
       for (int m=0; m<n_movies; m++) {
         Node movie_tag = getChildNo(movies_tag, "movie", m);
         String full_path = getAttribute(movie_tag, "full_path");
         String short_name = getAttribute(movie_tag, "short_name");
+        if (inB64) {
+          full_path = fromB64(full_path);
+          short_name = fromB64(short_name);
+        }
         if (new File(full_path).exists()) {
           parent.full_paths.add(full_path);
           parent.ol_movies.add(short_name);
