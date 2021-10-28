@@ -1,5 +1,6 @@
 ## QMP Development history:
 
+* 0.6 - Use base-64 for filenames and paths in config file (fixes character issues)
 * 0.5 - Fix resizing/scrolling issues of control window
       - Make all icons less terrible
 * 0.4 - Add time indicator (and readme)

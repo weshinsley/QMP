@@ -69,7 +69,6 @@ you can autodetect monitors, and pick a full-screen one.
 See the issues list, or create new ones!
 
 * Automatic check/install updates would be great, and fairly easy.
-* There are issues with filenames containing quotes or special characters.
 * There are issues with playing MOVs created with Apple devices, which
 sometimes can be fixed by renaming them to MP4...
 * There are also codec issues with more recent Apple devices, which can
