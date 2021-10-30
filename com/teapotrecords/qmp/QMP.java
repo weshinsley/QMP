@@ -249,6 +249,7 @@ public class QMP extends Application {
     about_dialog.setTitle("About Quick Media Player "+getVersion());
     about_dialog.setHeaderText("Issues or Comments: https://github.com/weshinsley/QMP");
     about_dialog.setContentText("wes.hinsley@gmail.com - "+getVersionDate());
+    ((Stage) about_dialog.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:resources/images/qmp_app.png"));
     mi_about.setOnAction(evt -> about_dialog.showAndWait());
     m_help.getItems().add(mi_about);
     mb_main.getMenus().addAll(m_file, m_settings, m_help);
@@ -409,6 +410,8 @@ public class QMP extends Application {
           }
           startMovie();
         }
+      } else {
+        updateButtons(-1);
       }
     });
 
