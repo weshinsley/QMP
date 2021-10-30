@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -33,6 +34,7 @@ public class ConfigScreen extends Stage {
     super();
     this.parent = parent;
     setTitle("Configure Scren Geometry");
+    this.getIcons().add(new Image("file:resources/images/qmp_app.png"));
     initModality(Modality.APPLICATION_MODAL);
 
     int gridy = 0;
