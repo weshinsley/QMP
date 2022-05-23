@@ -63,6 +63,9 @@ public class ConfigScreen extends Stage {
           scr_no++;
         }
         ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(choices.size() - 1), choices);
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("file:resources/images/qmp_app.png"));
+        
         dialog.setTitle("Screen detection");
         dialog.setHeaderText("Screens Detected:");
         dialog.setContentText("Choose screen: ");
