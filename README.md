@@ -11,12 +11,11 @@ fill the screen, and get it playing, in a professional looking way.
 So that's what QMP helps with: it lets you build a list of media clips
 you may want to play, and launch each with a double click at a
 pre-defined location, scaled to a given size, in a border-less
-window.
+window for movie files, or invisibly for audio-only files.
 
 I've been developing on Windows, but being JavaFX-based, hopefully
 it will work on other platforms, either out of the box, or with
-potential to fix up without too much pain (certainly compared to
-other movie player projects I tried to use.
+potential to fix up without too much pain.
 
 It was written to an urgent deadline, so is
 untidy here and there, and there is low-hanging fruit for some
@@ -41,17 +40,17 @@ effort for such a simple compilation is currently beyond my stamina.
 ![Main Screenshot](img/screenshot1.jpg)
 
 * You can manage playlists (new, load, save/as) from the File menu.
-* Add movies by dragging them from another window onto the list,
+* Add media by dragging them from another window onto the list,
 or use the add button.
-* Re-order movies (just for your convenience) with the up/down
+* Re-order media(just for your convenience) with the up/down
 buttons.
-* Remove movies from the list with the delete button.
-* Play movies by doubling clicking them, or highlighting them
+* Remove media from the list with the delete button.
+* Play media by doubling clicking them, or highlighting them
 and clicking the play button.
-* The Play turns into pause while the movie plays, and turns
+* The Play turns into pause while the media plays, and turns
 into resume if you pause the movie.
-* Left-most button rewinds a movie at any time.
-* The stop button stops the movie and removes the movie window.
+* Left-most button rewinds at any time.
+* The stop button stops and removes the movie window (if video).
 
 ### Settings
 
@@ -61,7 +60,7 @@ into resume if you pause the movie.
 * Settings -> Screen Settings is the only option so far.
 
 * Fairly simple - you can manually set the location and
-size of the video playind window (when it appears), or
+size of the video playing window (when it appears), or
 you can autodetect monitors, and pick a full-screen one.
 
 ## Issues to fix:

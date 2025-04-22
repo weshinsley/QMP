@@ -43,43 +43,42 @@ public class Movie {
 
   public void hide() {
     if (current_stage!=null) {
-      current_stage.hide();
+      if (current_stage.isShowing()) current_stage.hide();
       current_scene = null;
       current_stage = null;
     }
   }
 
   public void play(String movie) {
-    current_stage = new Stage();
-    final File f = new File(movie);
+    String ext = movie.substring(movie.lastIndexOf('.') + 1).toUpperCase();
+	final File f = new File(movie);
     final Media m = new Media(f.toURI().toString());
     mp = new MediaPlayer(m);
-    final MediaView mv = new MediaView(mp);
-    final DoubleProperty width = mv.fitWidthProperty();
-    final DoubleProperty height = mv.fitHeightProperty();
-
-    mv.setPreserveRatio(true);
-
-    StackPane root = new StackPane();
-    root.getChildren().add(mv);
-
-    current_stage.setX(parent.conf.screen_x);
-    current_stage.setY(parent.conf.screen_y);
-    current_stage.setWidth(parent.conf.screen_w);
-    current_stage.setHeight(parent.conf.screen_h);
-    current_scene = new Scene(root, parent.conf.screen_w, parent.conf.screen_h);
-    current_scene.setFill(Color.BLACK);
-    width.bind(Bindings.selectDouble(mv.sceneProperty(), "width"));
-    height.bind(Bindings.selectDouble(mv.sceneProperty(),  "height"));
-
-    current_stage.initStyle(StageStyle.UNDECORATED);
-    root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0), new Insets(0,0,0,0))));
-    current_stage.setScene(current_scene);
-    current_stage.show();
+    if (!(ext.equals("MP3")) || (ext.equals("WAV"))) {
+      final MediaView mv = new MediaView(mp);
+      final DoubleProperty width = mv.fitWidthProperty();
+      final DoubleProperty height = mv.fitHeightProperty();
+      mv.setPreserveRatio(true);
+      StackPane root = new StackPane();
+      root.getChildren().add(mv);
+      current_stage = new Stage();
+      current_stage.setX(parent.conf.screen_x);
+      current_stage.setY(parent.conf.screen_y);
+      current_stage.setWidth(parent.conf.screen_w);
+      current_stage.setHeight(parent.conf.screen_h);
+      current_scene = new Scene(root, parent.conf.screen_w, parent.conf.screen_h);
+      current_scene.setFill(Color.BLACK);
+      width.bind(Bindings.selectDouble(mv.sceneProperty(), "width"));
+      height.bind(Bindings.selectDouble(mv.sceneProperty(),  "height"));
+      current_stage.initStyle(StageStyle.UNDECORATED);
+      root.setBackground(new Background(new BackgroundFill(Color.BLACK, new CornerRadii(0), new Insets(0,0,0,0))));
+      current_stage.setScene(current_scene);
+      current_stage.show();
+    }
     mp.setOnEndOfMedia(new Runnable() {
       @Override public void run() {
         _is_playing = false;
-        current_stage.hide();
+        if (current_stage != null) current_stage.hide();
         current_scene = null;
         current_stage = null;
         parent.endMovie();
