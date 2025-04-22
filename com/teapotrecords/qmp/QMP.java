@@ -273,7 +273,8 @@ public class QMP extends Application {
       List<File> files = evt.getDragboard().getFiles();
       for (int i=0; i<files.size(); i++) {
         String f = files.get(i).getName().toLowerCase();
-        if (f.endsWith(".avi") || (f.endsWith(".mp4")) || (f.endsWith(".mov"))) {
+        if ((f.endsWith(".avi")) || (f.endsWith(".mp4")) || (f.endsWith(".mov")) ||
+            (f.endsWith(".wav")) || (f.endsWith(".mp3"))) {
           ol_movies.add(files.get(i).getName());
           full_paths.add(files.get(i).getAbsolutePath());
         }
