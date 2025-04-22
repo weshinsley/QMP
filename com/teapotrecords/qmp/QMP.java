@@ -39,8 +39,8 @@ import javafx.util.Duration;
 
 public class QMP extends Application {
 
-  public String getVersion() { return "0.6"; }
-  public String getVersionDate() { return "28th Oct 2021"; }
+  public String getVersion() { return "0.7"; }
+  public String getVersionDate() { return "22nd Apr 2025"; }
 
   // Configuration
 
@@ -273,7 +273,8 @@ public class QMP extends Application {
       List<File> files = evt.getDragboard().getFiles();
       for (int i=0; i<files.size(); i++) {
         String f = files.get(i).getName().toLowerCase();
-        if (f.endsWith(".avi") || (f.endsWith(".mp4")) || (f.endsWith(".mov"))) {
+        if ((f.endsWith(".avi")) || (f.endsWith(".mp4")) || (f.endsWith(".mov")) ||
+            (f.endsWith(".wav")) || (f.endsWith(".mp3"))) {
           ol_movies.add(files.get(i).getName());
           full_paths.add(files.get(i).getAbsolutePath());
         }
@@ -378,6 +379,7 @@ public class QMP extends Application {
     b_add.setOnAction(evt -> {
       FileChooser fc = new FileChooser();
       fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Movies", "*.avi", "*.mov", "*.mp4"));
+      fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio",  "*.wav", "*.mp3"));
       List<File> fs = fc.showOpenMultipleDialog(stage);
       if (fs!=null) {
         for (int i = 0; i < fs.size(); i++) {
